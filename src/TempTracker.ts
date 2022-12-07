@@ -80,4 +80,21 @@ export class TempTracker {
 
     this.average = tracker.sum / tracker.count;
   }
+
+  public getTemps() {
+    const temps = Object.keys(this.temperaturesAndCounts).map((a: string) =>
+      Number(a)
+    );
+
+    const completeArray = [];
+    for (const temp of temps) {
+      const count = this.temperaturesAndCounts[temp];
+
+      for (let i = 0; i < count; i++) {
+        completeArray.push(temp);
+      }
+    }
+
+    return completeArray.join(", ");
+  }
 }
