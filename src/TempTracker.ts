@@ -26,11 +26,13 @@ export class TempTracker {
   }
 
   public insertTemperature(temperature: number) {
-    const previousCountOfTemperature = this.temperaturesAndCounts[temperature]
+    const previousCountOfTemperature = this.temperaturesAndCounts[temperature] // O(1)
       ? this.temperaturesAndCounts[temperature]
       : 0;
-    const newCountOfTemperature = previousCountOfTemperature + 1;
-    this.temperaturesAndCounts[temperature] = newCountOfTemperature;
+    const newCountOfTemperature = previousCountOfTemperature + 1; // O(1)
+    this.temperaturesAndCounts[temperature] = newCountOfTemperature; // O(1)
+
+    this.updateMinAndMax(temperature);
 
     this.updateStatisticMetrics();
   }
@@ -38,19 +40,27 @@ export class TempTracker {
   private updateStatisticMetrics() {
     const temps = Object.keys(this.temperaturesAndCounts).map((a: string) =>
       Number(a)
-    );
-    this.updateMinAndMax(temps);
+    ); // O(n)
     this.updateMode(temps);
     this.updateAverage(temps);
   }
 
-  private updateMinAndMax(temps: number[]) {
-    const sortedTempsAsc = temps.sort((a, b) => a - b); // ascending
-    this.min = sortedTempsAsc[0];
-    this.max = sortedTempsAsc[sortedTempsAsc.length - 1];
+  private updateMinAndMax(temp: number) {
+    // O(1)
+    if (this.min === undefined && this.max === undefined) {
+      this.min = temp;
+      this.max = temp;
+    }
+
+    if (temp < this.min) {
+      this.min = temp;
+    } else if (temp > this.max) {
+      this.max = temp;
+    }
   }
 
   private updateMode(temps: number[]) {
+    // O(n)
     const tracker = {
       highestCount: 0,
       modalTemp: -1,
@@ -67,6 +77,7 @@ export class TempTracker {
   }
 
   private updateAverage(temps: number[]) {
+    // O(n)
     const tracker = {
       sum: 0,
       count: 0,
